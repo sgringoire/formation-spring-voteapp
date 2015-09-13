@@ -10,5 +10,6 @@
   
   <modules>
   	<module>voteapp-webapp</module>
+  	<module>voteapp-webapp-ng</module>
   </modules>
 </project>
