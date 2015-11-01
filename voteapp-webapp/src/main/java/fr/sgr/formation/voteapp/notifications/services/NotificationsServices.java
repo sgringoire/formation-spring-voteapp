@@ -7,6 +7,8 @@ import javax.persistence.EntityManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.sgr.formation.voteapp.notifications.modele.Notification;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,7 @@ public class NotificationsServices {
 	 * @param message
 	 *            Message représentant l'événement.
 	 */
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void notifier(String message) {
 		log.info("[EVT]: " + message);
 

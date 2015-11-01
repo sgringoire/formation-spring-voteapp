@@ -26,7 +26,6 @@ public class ValidationUtilisateurServices {
 		if (utilisateur == null) {
 			return false;
 		}
-
 		validerLogin(utilisateur);
 		validerNom(utilisateur);
 		validerPrenom(utilisateur);
