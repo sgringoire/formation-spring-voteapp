@@ -50,26 +50,40 @@ public class UtilisateursServices {
 	public Utilisateur creer(Utilisateur utilisateur) throws UtilisateurInvalideException {
 		log.info("=====> Création de l'utilisateur : {}.", utilisateur);
 
-		if (utilisateur == null) {
-			throw new UtilisateurInvalideException(ErreurUtilisateur.UTILISATEUR_OBLIGATOIRE);
-		}
-
-		/** Validation de l'existance de l'utilisateur. */
-		if (rechercherParLogin(utilisateur.getLogin()) != null) {
-			throw new UtilisateurInvalideException(ErreurUtilisateur.UTILISATEUR_EXISTANT);
-		}
-
-		/**
-		 * Validation de l'utilisateur: lève une exception si l'utilisateur est
-		 * invalide.
-		 */
-		validationServices.validerUtilisateur(utilisateur);
-
 		/** Notification de l'événement de création */
-		notificationsServices.notifier("Création de l'utilisateur: " + utilisateur.toString());
+		notificationsServices
+				.notifier("Demande de création d'un utilisateur: " + utilisateur);
 
-		/** Persistance de l'utilisateur. */
-		entityManager.persist(utilisateur);
+		try {
+			if (utilisateur == null) {
+				throw new UtilisateurInvalideException(ErreurUtilisateur.UTILISATEUR_OBLIGATOIRE);
+			}
+
+			/** Validation de l'existance de l'utilisateur. */
+			if (rechercherParLogin(utilisateur.getLogin()) != null) {
+				throw new UtilisateurInvalideException(ErreurUtilisateur.UTILISATEUR_EXISTANT);
+			}
+
+			/**
+			 * Validation de l'utilisateur: lève une exception si l'utilisateur
+			 * est invalide.
+			 */
+			validationServices.validerUtilisateur(utilisateur);
+
+			/** Persistance de l'utilisateur. */
+			entityManager.persist(utilisateur);
+
+			/** Notification de l'événement de création */
+			notificationsServices
+					.notifier("Utilisateur créé: " + utilisateur);
+		} catch (UtilisateurInvalideException e) {
+			/** Notification de l'événement de création */
+			notificationsServices
+					.notifier("Erreur de validation lors de la création de l'utilisateur: " + utilisateur);
+
+			/** Propagation de l'erreur. */
+			throw e;
+		}
 
 		return utilisateur;
 	}
